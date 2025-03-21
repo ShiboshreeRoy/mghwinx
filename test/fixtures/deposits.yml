@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  transaction_id: MyString
+  amount: 9.99
+  status: MyString
+  user: one
+
+two:
+  transaction_id: MyString
+  amount: 9.99
+  status: MyString
+  user: two
