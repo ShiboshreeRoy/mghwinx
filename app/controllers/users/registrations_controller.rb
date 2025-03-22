@@ -2,6 +2,7 @@
 
 class Users::RegistrationsController < Devise::RegistrationsController
   respond_to :json
+  before_action :validate_sign_up_params, only: [:create]
 
   private
 
@@ -17,7 +18,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
     else
       render json: {
         status: {
-          message: "User could not be created successfully.",
+          code: 422,
+          message: "User could not be created.",
           errors: resource.errors.full_messages
         }
       }, status: :unprocessable_entity
@@ -26,13 +28,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def sign_up_params
     params.require(:user).permit(:email, :password, :password_confirmation)
-  rescue ActionController::ParameterMissing
-    render json: { status: 400, message: "Invalid parameters. Expected 'user' object." }, status: :bad_request
   end
-  
-  private
 
-  def sign_up_params
-    params.require(:user).permit(:email, :password, :password_confirmation)
+  def validate_sign_up_params
+    return if params[:user].present?
+    
+    render json: {
+      status: {
+        code: 400,
+        message: "Invalid parameters. Expected 'user' object."
+      }
+    }, status: :bad_request
   end
 end
